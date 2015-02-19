@@ -1,0 +1,8 @@
+**/*.DS_Store
+**/bower_components/
+**/node_modules/
+**/.sass-cache/
+**/team_images/
+**/output_documents/
+**/image_bank/
+npm-debug.log
