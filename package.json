@@ -2,6 +2,10 @@
   "name": "LeedanManagementSystem",
   "version": "1.0.0",
   "description": "Leedan management system",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/pepper/LeedanManagementSystem"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
