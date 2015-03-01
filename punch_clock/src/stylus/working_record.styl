@@ -1,0 +1,58 @@
+@import "./color_definition"
+
+.WorkingRecord
+	$work-item-size = 210px
+	.WorkItem
+		position		relative
+		display			inline-block
+		vertical-align	top
+		width			$work-item-size
+		height			$work-item-size
+		padding			16px
+		overflow		hidden
+		$title-height = 50px
+		.Title
+			font-size			20px
+			color				$color_green
+			text-shadow			2px 2px 2px #000000
+		$score-selector-font-size = 95px
+		.ScoreSelectorContainer
+			padding-top			15px
+			.LeftArrow, .RightArrow
+				width			25px
+				display			none
+			.ScoreSelector
+				width			175px
+				font-size		$score-selector-font-size
+				font-weight		bold
+				
+			> div
+				line-height		$score-selector-font-size
+				display			inline-block
+				vertical-align	top
+				text-align		center
+				color			$color_gray_light
+				text-shadow		2px 2px 2px #000000
+		.Total
+			font-size			16px
+			margin-top			10px
+			color				$color_gray_light
+			text-shadow			1px 1px 1px #000000
+		.LastModified
+			font-size			12px
+			margin-top			5px
+			color				$color_gray_light
+			text-shadow			1px 1px 1px #000000
+		&.Active
+			background		$color_green
+			.Title,.Total,.LastModified
+				color		$color_white
+			.ScoreSelectorContainer
+				.LeftArrow, .RightArrow
+					display		inline-block
+				.ScoreSelector
+					width		125px
+					color		$color_white
+				> div
+					color		$color_white
+					text-shadow	3px 3px 3px #333333
