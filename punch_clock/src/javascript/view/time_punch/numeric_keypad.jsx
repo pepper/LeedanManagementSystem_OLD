@@ -9,11 +9,18 @@ var NumericKeypad = React.createClass({
 		return {
 			inputing: false,
 			inputIdNumber: "",
-			inputTimeout: null
+			inputTimeout: null,
+			touching: ""
 		};
 	},
+	handleTouchStart: function(key){
+		this.setState({
+			touching: key
+		});
+	},
 	handleTouchEnd: function(key){
-		if(this.props.number){
+		var store = this.getFlux().store("CompanyStore");
+		if(this.props.number && key.length == 1){
 			if(this.state.inputTimeout){
 				clearTimeout(this.state.inputTimeout);
 			}
@@ -21,21 +28,36 @@ var NumericKeypad = React.createClass({
 				this.getFlux().actions.loginEmployee(this.state.inputIdNumber + key);
 				this.setState({
 					inputIdNumber: "",
+					touching: "",
 					inputTimeout: null
 				});
 			}
 			else{
 				this.setState({
 					inputIdNumber: this.state.inputIdNumber + key,
+					touching: "",
 					inputTimeout: setTimeout(function(){
 						this.setState({
 							inputIdNumber: "",
+							touching: "",
 							inputTimeout: null
 						});
 					}.bind(this), 3000)
 				});
 			}
 		}
+		if(this.props.duty && store.employee){
+			switch(key){
+				case "OnDuty":
+				case "Break":
+				case "OffDuty":
+					this.getFlux().actions.addPunchRecord(store.company._id, store.employee._id, key);
+					break;
+			}
+		}
+	},
+	handleLogout: function(){
+		this.getFlux().actions.logoutEmployee();
 	},
 	render: function(){
 		if(String(this.props.number) == "true"){
@@ -54,7 +76,7 @@ var NumericKeypad = React.createClass({
 			this.props.login = true;
 			setTimeout(function(){
 				this.getFlux().actions.logoutEmployee();
-			}.bind(this), 10000);
+			}.bind(this), 30000);
 		}
 		var key = {};
 		_.each({
@@ -151,13 +173,16 @@ var NumericKeypad = React.createClass({
 			if(this.props.lunch == value.lunch){
 				value.keyClass += " Active";
 			}
+			if(index == this.state.touching){
+				value.keyClass += " Touching";
+			}
 			key[index] = value;
 		}.bind(this));
 
 		var keyDom = [];
 		for(var index in key){
 			keyDom.push(
-				<div key={Math.random()} className={key[index].keyClass} onTouchEnd={this.handleTouchEnd.bind(null, index)} dangerouslySetInnerHTML={{__html: key[index].title}}></div>
+				<div key={"Key" + index} className={key[index].keyClass} onTouchStart={this.handleTouchStart.bind(null, index)} onTouchEnd={this.handleTouchEnd.bind(null, index)} dangerouslySetInnerHTML={{__html: key[index].title}}></div>
 			);
 		}
 		return (
@@ -168,7 +193,7 @@ var NumericKeypad = React.createClass({
 				<div className="ContentAreaContainer">
 					<div className="ContentArea NumericKeypad">
 						{keyDom}
-						<div className="Logout">
+						<div className="Logout" onTouchEnd={this.handleLogout}>
 							<i className="fa fa-sign-out"></i>
 							登出
 						</div>

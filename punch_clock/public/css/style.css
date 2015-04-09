@@ -85,7 +85,7 @@ div {
   height: 100%;
   font-size: 20px;
   font-weight: bold;
-  color: #757575;
+  color: #fff;
   padding-left: 13px;
   padding-top: 32px;
 }
@@ -162,9 +162,9 @@ div {
 .ActionAndPeopleContainer .Item.People > div {
   height: 52px;
   padding-top: 9px;
-  opacity: 0.5;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  filter: alpha(opacity=50);
+  opacity: 0.3;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+  filter: alpha(opacity=30);
 }
 .ActionAndPeopleContainer .Item.People.Active > div {
   opacity: 1;
@@ -383,6 +383,35 @@ div {
 .WorkingRecord .WorkItem.Active .ScoreSelectorContainer > div {
   color: #fff;
   text-shadow: 3px 3px 3px #333;
+}
+.WorkingRecord .ContentAreaContainer .ActionContainer div {
+  display: inline-block;
+  height: 70px;
+}
+.WorkingRecord .ContentAreaContainer .ActionContainer .Confirm {
+  padding-top: 20px;
+  margin-left: 23px;
+  color: #f99517;
+  font-size: 12px;
+}
+.WorkingRecord .ContentAreaContainer .ActionContainer .Confirm i {
+  font-size: 30px;
+}
+.WorkingRecord .ContentAreaContainer .ActionContainer .SignOut {
+  padding-top: 20px;
+  margin-left: 160px;
+  color: #f99517;
+  font-size: 12px;
+}
+.WorkingRecord .ContentAreaContainer .ActionContainer .SignOut i {
+  font-size: 30px;
+}
+.WorkingRecord .ContentAreaContainer .ActionContainer .Summery {
+  margin-left: 160px;
+  width: 200px;
+  font-size: 22px;
+  color: #149b99;
+  line-height: 70px;
 }
 div {
   -webkit-box-sizing: border-box;

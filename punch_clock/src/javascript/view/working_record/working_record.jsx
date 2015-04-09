@@ -1,4 +1,5 @@
 var React = require("react");
+var	Router = require("react-router");
 var	Fluxxor = require("fluxxor"),
 	FluxMixin = Fluxxor.FluxMixin(React),
 	StoreWatchMixin = Fluxxor.StoreWatchMixin;
@@ -21,69 +22,18 @@ var actions = [{
 	title: "全部列印至檔案"
 }];
 addKeyToArrayItem(actions);
-
-var works = [{
-	title: "繞線",
-	score: 12,
-	total: 343,
-	lastModified: new Date()
-}, {
-	title: "電機組裝",
-	score: 2,
-	total: 54,
-	lastModified: new Date()
-}, {
-	title: "會計入帳",
-	score: 24,
-	total: 234,
-	lastModified: new Date()
-}, {
-	title: "製圖",
-	score: 65,
-	total: 90,
-	lastModified: new Date()
-}, {
-	title: "備料",
-	score: 12,
-	total: 111,
-	lastModified: new Date()
-},  {
-	title: "電機測試",
-	score: 43,
-	total: 323,
-	lastModified: new Date()
-},  {
-	title: "變速機組裝",
-	score: 2,
-	total: 8,
-	lastModified: new Date()
-},  {
-	title: "磁石貼附",
-	score: 23,
-	total: 43,
-	lastModified: new Date()
-},  {
-	title: "清潔",
-	score: 2,
-	total: 45,
-	lastModified: new Date()
-},  {
-	title: "買備料",
-	score: 18,
-	total: 92,
-	lastModified: new Date()
-}];
-addKeyToArrayItem(works);
+actions = [];
 
 var WorkingRecord = React.createClass({
-	mixins: [FluxMixin, StoreWatchMixin("CompanyStore")],
+	mixins: [FluxMixin, StoreWatchMixin("CompanyStore"), Router.Navigation, Router.State],
 	getStateFromFlux: function(){
 		var store = this.getFlux().store("CompanyStore");
 		var newState = {
 			loading: store.loading,
 			error: store.error,
 			company: store.company,
-			peoples: []
+			peoples: [],
+			newWorkItemList: []
 		}
 		if(store.company && store.company.employee_list){
 			if(store.employee){
@@ -92,28 +42,32 @@ var WorkingRecord = React.createClass({
 				newState.duty = true;
 				newState.leave = false;
 				newState.lunch = true;
+				newState.todayTotal = store.employee.todayTotal;
 				if(store.employee.permission.indexOf("manage_employee") >= 0){
 					newState.manageEmployeePermission = true;
 				}
 				if(store.employee.permission.indexOf("leave") >= 0){
 					newState.leavePermission = true;
 				}
+				if(store.employee.newWorkingItemList){
+					newState.newWorkItemList = store.employee.newWorkingItemList;
+				}
+				else{
+					setTimeout(function(){
+						this.getFlux().actions.createEmptyWorkingItemList();
+					}.bind(this), 500);
+				}
 			}
 			else{
-				newState.login = false;
-				newState.number = true;
-				newState.duty = false;
-				newState.leave = false;
-				newState.lunch = false;
-				newState.manageEmployeePermission = false;
-				newState.leavePermission = false;
+				alert("請先打卡登入");
+				this.transitionTo("time_punch");
 			}
 			newState.peoples = store.company.employee_list.map(function(employee){
 				return {
 					name: employee.name,
 					idNumber: employee.id_number,
 					scoreTrend: "up",
-					score: 0,
+					score: employee.totalScore,
 					avatar: "",
 					active: ((store.employee && store.employee._id == employee._id)?true:false)
 				}
@@ -125,7 +79,7 @@ var WorkingRecord = React.createClass({
 		return (
 			<div className="FunctionContainer TimePunch">
 				<ActionAndPeopleContainer manageEmployeePermission={this.state.manageEmployeePermission} actions={actions} peoples={this.state.peoples} />
-				<WorkItemList works={works} />
+				<WorkItemList todayTotal={this.state.todayTotal} works={this.state.newWorkItemList} />
 			</div>
 		);
 	}

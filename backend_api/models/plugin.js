@@ -4,6 +4,9 @@ var crypto = require("crypto");
 var util = require("util");
 var Promise = require("bluebird");
 var _ = require("underscore");
+var longStackTraces = require("long-stack-traces");
+
+var ObjectId = mongoose.Schema.Types.ObjectId;
 
 var logger = require("../utilities/logger");
 
@@ -153,3 +156,34 @@ exports.SimplePropertyUpdatePlugin = function(schema, options){
 		return instance.SaveWithPromise(save);
 	}
 }
+
+// exports.ActionLogPlugin = function(schema, options){
+// 	schema.add({
+// 		action_list: [{
+// 			action:			{ type: String, trim: true, default: "" },
+// 			note:			{ type: String, trim: true, default: "" },
+// 			value:			{ type: String, trim: true, default: "" },
+// 		}]
+// 	});
+// 	if(options.runtime_debug){
+// 		var ObjectSnapshotSchema = new mongoose.Schema({
+// 			object_type			:{ type: String, trim: true, default: "" },
+// 			object_id			:{ type: ObjectId },
+// 			snapshot			:{ type: String, trim: true, default: "" },
+// 			stack				:{ type: String, trim: true, default: "" }
+// 		});
+// 		ObjectSnapshotSchema.plugin(ModifiedFlagPlugin);
+// 		ObjectSnapshotSchema.plugin(SaveWithPromisePlugin);
+// 		mongoose.model("ObjectSnapshot", ObjectSnapshotSchema);
+// 	}
+// 	schema.AddActionLog = function(action, note, value){
+
+// 	}
+// 	schema.pre("save", function(next){
+// 		var instance = this;
+// 		next();
+// 	});
+// 	schema.post("save", function(instance){
+// 		var object = instance.toObject();
+// 	});
+// }

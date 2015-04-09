@@ -17,7 +17,7 @@ var EmployeeSchema = new mongoose.Schema({
 	serial_number				:{ type: String, trim: true, default: "" },
 	passcode					:{ type: String, trim: true, default: "" },
 	gender						:{ type: String, trim: true, default: "" },
-	permission					:[{ type: String, trim: true, default: "" }],	 //leave, manage_employee
+	permission					:[{ type: String, trim: true, default: "" }], // leave, manage_employee
 	group						:[{ type: String, trim: true, default: "" }],
 	punch_record:{
 		raw_record_list:[{
@@ -44,7 +44,7 @@ var EmployeeSchema = new mongoose.Schema({
 				name			:{ type: String, trim: true, default: "" },
 				employee		:{ type: ObjectId, ref: "Employee" }
 			},
-			type				:{ type: String, trim: true, default: "" }, //personal, sick, annual
+			type				:{ type: String, trim: true, default: "" }, // personal, sick, annual
 			start				:{ type: Date},
 			end					:{ type: Date},
 			description			:{ type: String, trim: true, default: "" }
@@ -62,7 +62,11 @@ var EmployeeSchema = new mongoose.Schema({
 		food_allowance			:{ type: Number, min: 0, default: 0 },
 		labor_insurance			:{ type: Number, min: 0, default: 0 },
 		health_insurance		:{ type: Number, min: 0, default: 0 }
-	}
+	},
+	thing_need_to_do:[{
+		type					:{ type: String, trim: true, default: "" }, // add_working_record
+		datetime				:{ type: Date }
+	}]
 });
 
 EmployeeSchema.plugin(plugin.DocumentVersionPlugin);
@@ -155,6 +159,12 @@ EmployeeSchema.methods.AddPunchRecord = function(type){
 		type: type,
 		datetime: new Date()
 	});
+	if(type == "Break" || type == "OffDuty"){
+		employee.thing_need_to_do.push({
+			type: "add_working_record",
+			datetime: new Date()
+		});
+	}
 	return Promise.resolve();
 }
 EmployeeSchema.methods.AddWorkingRecord = function(company, workingItemList){
@@ -169,6 +179,13 @@ EmployeeSchema.methods.AddWorkingRecord = function(company, workingItemList){
 		working_item_list: workingItemListToRecord,
 		datetime: new Date()
 	});
+	var newThingNeedToDo = [];
+	employee.thing_need_to_do.forEach(function(thingNeedToDo){
+		if(thingNeedToDo.type != "add_working_record"){
+			newThingNeedToDo.push(thingNeedToDo);
+		}
+	});
+	employee.thing_need_to_do = newThingNeedToDo;
 	return Promise.resolve();
 }
 

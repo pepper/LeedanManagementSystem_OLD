@@ -1,4 +1,5 @@
 var React = require("react");
+var	Router = require("react-router");
 var	Fluxxor = require("fluxxor"),
 	FluxMixin = Fluxxor.FluxMixin(React),
 	StoreWatchMixin = Fluxxor.StoreWatchMixin;
@@ -21,9 +22,10 @@ var actions = [{
 	title: "全部列印至檔案"
 }];
 addKeyToArrayItem(actions);
+actions = [];
 
 var TimePunch = React.createClass({
-	mixins: [FluxMixin, StoreWatchMixin("CompanyStore")],
+	mixins: [FluxMixin, StoreWatchMixin("CompanyStore"), Router.Navigation, Router.State],
 	getStateFromFlux: function(){
 		var store = this.getFlux().store("CompanyStore");
 		var newState = {
@@ -38,12 +40,20 @@ var TimePunch = React.createClass({
 				newState.number = false;
 				newState.duty = true;
 				newState.leave = false;
-				newState.lunch = true;
+				newState.lunch = false;
 				if(store.employee.permission.indexOf("manage_employee") >= 0){
 					newState.manageEmployeePermission = true;
 				}
 				if(store.employee.permission.indexOf("leave") >= 0){
 					newState.leavePermission = true;
+				}
+				if(store.employee.thing_need_to_do){
+					var found = store.employee.thing_need_to_do.some(function(thingNeedToDo){
+						if(thingNeedToDo.type == "add_working_record"){
+							this.transitionTo("working_record");
+							alert("您有工作記錄尚未登記");
+						}
+					}.bind(this));
 				}
 			}
 			else{
@@ -60,7 +70,7 @@ var TimePunch = React.createClass({
 					name: employee.name,
 					idNumber: employee.id_number,
 					scoreTrend: "up",
-					score: 0,
+					score: employee.totalScore,
 					avatar: "",
 					active: ((store.employee && store.employee._id == employee._id)?true:false)
 				}

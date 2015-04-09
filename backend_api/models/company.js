@@ -46,7 +46,6 @@ CompanySchema.statics.CreateCompany = function(property){
 	}
 	var number = Math.floor(Math.random() * 1000000000);
 	var serialNumber = ("9" + (new Array(10 - number.toString().length)).join("0") + number);
-
 	var company;
 	Promise.resolve(model.create({
 		title: property.title,

@@ -1,6 +1,10 @@
 var React = require("react");
+var	Fluxxor = require("fluxxor"),
+	FluxMixin = Fluxxor.FluxMixin(React);
+	// StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
 var WorkItem = React.createClass({
+	mixins: [FluxMixin],
 	getInitialState: function() {
 		return {
 			active: false,
@@ -20,11 +24,13 @@ var WorkItem = React.createClass({
 		this.setState({
 			active: false,
 			startOffset: 0,
-			startX: -1
+			startX: -1,
+			offset: 0
 		});
+		this.getFlux().actions.changeWorkingItemScore(this.props.title, this.props.score + this.state.offset);
 	},
 	handleTouchMove: function(event){
-		var newOffset = this.state.startOffset + Math.floor((event.touches[0].clientX - this.state.startX) / 20);
+		var newOffset = this.state.startOffset + Math.floor((event.touches[0].clientX - this.state.startX) / 40);
 		if(this.props.score + newOffset < 0){
 			newOffset = 0 - this.props.score;
 		}

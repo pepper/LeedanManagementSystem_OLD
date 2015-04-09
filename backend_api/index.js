@@ -170,9 +170,8 @@ router.get("/init", function(req, res){
 		}]
 	}).then(function(newCompany){
 		company = newCompany;
-
 		var employeeList = [
-			{ "name": "王晃信", "id_number": "PLM001A", "passcode": "43821931" },
+			{ "name": "王晃信", "id_number": "PLM001A", "passcode": "11111111" },
 			{ "name": "張訓賢", "id_number": "PLM002A", "passcode": "34325222" },
 			{ "name": "江武翰", "id_number": "PLM003A", "passcode": "46547644" },
 			{ "name": "陳智傑", "id_number": "PLM004A", "passcode": "59315333" },
@@ -220,7 +219,6 @@ router.get("/init", function(req, res){
 		responseMiddleware.sendSystemErrorResponse(req, res, err);
 	});
 });
-
 router.post("/company", function(req, res){
 	Company.CreateCompany(req.body).then(function(company){
 		res.result.success = true;
@@ -315,6 +313,24 @@ router.post("/company/:company_id/employee/:employee_id/punch_record", function(
 	}
 	else{
 		responseMiddleware.sendErrorResponse(req, res, new error.InputPropertyNotAcceptError("Require title property."), 400);
+	}
+});
+router.post("/company/:company_id/employee/:employee_id/working_record", function(req, res){
+	console.log(JSON.stringify(req.body));
+	if(util.isArray(req.body.working_item_list) && req.body.working_item_list.length > 0){
+		req.employee.AddWorkingRecord(req.company, req.body.working_item_list).then(function(){
+			return req.company.SaveWithPromise(true);
+		}).then(function(){
+			res.result.success = true;
+			res.result.message = "Add Work Item List Success";
+			res.result.objects = [req.employee];
+			res.status(200).json(res.result);
+		}).catch(function(err){
+			responseMiddleware.sendSystemErrorResponse(req, res, err);
+		});
+	}
+	else{
+		responseMiddleware.sendErrorResponse(req, res, new error.InputPropertyNotAcceptError("Require working_item_list property."), 400);
 	}
 });
 database.connect().then(function(db){}).catch(function(err){

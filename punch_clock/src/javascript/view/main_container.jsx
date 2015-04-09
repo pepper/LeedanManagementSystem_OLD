@@ -23,14 +23,6 @@ var mainMenuData = [{
 	icon: "diamond",
 	description: "Working Record",
 	link: "working_record"
-}, {
-	icon: "usd",
-	description: "Account",
-	link: "time_punch"
-}, {
-	icon: "cutlery",
-	description: "Ordering",
-	link: "working_record"
 }];
 addKeyToArrayItem(mainMenuData);
 
