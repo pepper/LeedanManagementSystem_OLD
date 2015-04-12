@@ -66,6 +66,7 @@ var CompanyStore = Fluxxor.createStore({
 			return employee;
 		});
 		this.recalaculateEmployeeList();
+		this.onCreateEmptyWorkingItemList();
 		this.emit("change");
 	},
 	onCreateEmptyWorkingItemList: function(){
@@ -117,8 +118,6 @@ var CompanyStore = Fluxxor.createStore({
 			}
 		}
 	},
-
-
 	recalaculateEmployeeList: function(){
 		this.company.employee_list.forEach(function(employee){
 			employee.totalScore = 0;

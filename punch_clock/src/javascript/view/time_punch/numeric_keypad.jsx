@@ -1,17 +1,55 @@
 var React = require("react");
+var	Router = require("react-router");
 var	Fluxxor = require("fluxxor"),
 	FluxMixin = Fluxxor.FluxMixin(React);
+var Bootstrap = require("react-bootstrap"),
+	Modal = Bootstrap.Modal,
+	Button = Bootstrap.Button,
+	Label = Bootstrap.Label,
+	OverlayMixin = Bootstrap.OverlayMixin;
 var _ = require("underscore");
 
 var NumericKeypad = React.createClass({
-	mixins: [FluxMixin],
+	mixins: [FluxMixin, OverlayMixin, Router.Navigation, Router.State],
 	getInitialState: function() {
 		return {
 			inputing: false,
 			inputIdNumber: "",
 			inputTimeout: null,
-			touching: ""
+			touching: "",
+			isOnDutyModalOpen: false,
+			isOffDutyModalOpen: false,
+			isBreakModalOpen: false
 		};
+	},
+	handleOnDutyModal: function(){
+		this.setState({
+			isOnDutyModalOpen: !this.state.isOnDutyModalOpen
+		});
+	},
+	handleOffDutyModal: function(){
+		var needRedirect = false;
+		if(this.state.isOffDutyModalOpen){
+			needRedirect = true;
+		}
+		this.setState({
+			isOffDutyModalOpen: !this.state.isOffDutyModalOpen
+		});
+		if(needRedirect){
+			this.transitionTo("working_record");
+		}
+	},
+	handleBreakModal: function(){
+		var needRedirect = false;
+		if(this.state.isBreakModalOpen){
+			needRedirect = true;
+		}
+		this.setState({
+			isBreakModalOpen: !this.state.isBreakModalOpen
+		});
+		if(needRedirect){
+			this.transitionTo("working_record");
+		}
 	},
 	handleTouchStart: function(key){
 		this.setState({
@@ -42,22 +80,50 @@ var NumericKeypad = React.createClass({
 							touching: "",
 							inputTimeout: null
 						});
-					}.bind(this), 3000)
+					}.bind(this), 5000)
 				});
 			}
 		}
 		if(this.props.duty && store.employee){
 			switch(key){
 				case "OnDuty":
-				case "Break":
-				case "OffDuty":
+					this.handleOnDutyModal();
 					this.getFlux().actions.addPunchRecord(store.company._id, store.employee._id, key);
+					this.setState({
+						inputIdNumber: "",
+						touching: "",
+						inputTimeout: null
+					});
+					break;
+				case "Break":
+					this.handleBreakModal();
+					this.getFlux().actions.addPunchRecord(store.company._id, store.employee._id, key);
+					this.setState({
+						inputIdNumber: "",
+						touching: "",
+						inputTimeout: null
+					});
+					break;
+				case "OffDuty":
+					this.handleOffDutyModal();
+					this.getFlux().actions.addPunchRecord(store.company._id, store.employee._id, key);
+					this.setState({
+						inputIdNumber: "",
+						touching: "",
+						inputTimeout: null
+					});
 					break;
 			}
 		}
 	},
 	handleLogout: function(){
 		this.getFlux().actions.logoutEmployee();
+	},
+	componentWillUnmount: function(){
+		if(this.logoutTimer){
+			clearTimeout(this.logoutTimer);
+			this.logoutTimer = null;
+		}
 	},
 	render: function(){
 		if(String(this.props.number) == "true"){
@@ -74,7 +140,7 @@ var NumericKeypad = React.createClass({
 		}
 		if(String(this.props.login) == "true"){
 			this.props.login = true;
-			setTimeout(function(){
+			this.logoutTimer = setTimeout(function(){
 				this.getFlux().actions.logoutEmployee();
 			}.bind(this), 30000);
 		}
@@ -201,6 +267,53 @@ var NumericKeypad = React.createClass({
 				</div>
 			</div>
 		);
+	},
+	renderOverlay: function(){
+		if(this.state.isOnDutyModalOpen){
+			return (
+				<Modal title="打卡記錄" animation onRequestHide={this.handleOnDutyModal}>
+					<div className="modal-body">
+						<h2><Label bsStyle="success">上班卡</Label>&nbsp;&nbsp;打卡成功</h2>
+					</div>
+					<div className="modal-footer">
+						<Button bsStyle="danger" onClick={this.handleOnDutyModal}>關閉</Button>
+					</div>
+				</Modal>
+			);
+		}
+		else if(this.state.isOffDutyModalOpen){
+			return (
+				<Modal title="打卡記錄" animation onRequestHide={this.handleOffDutyModal}>
+					<div className="modal-body">
+						<h2><Label bsStyle="success">下班卡</Label>&nbsp;&nbsp;打卡成功</h2><br />
+						<p>
+							請記得填寫工作記錄表
+						</p>
+					</div>
+					<div className="modal-footer">
+						<Button bsStyle="success" onClick={this.handleOffDutyModal}>前往填寫</Button>
+					</div>
+				</Modal>
+			);
+		}
+		else if(this.state.isBreakModalOpen){
+			return (
+					<Modal title="打卡記錄" animation onRequestHide={this.handleBreakModal}>
+					<div className="modal-body">
+						<h2><Label bsStyle="success">休息卡</Label>&nbsp;&nbsp;打卡成功</h2><br />
+						<p>
+							請記得填寫工作記錄表
+						</p>
+					</div>
+					<div className="modal-footer">
+						<Button bsStyle="success" onClick={this.handleBreakModal}>前往填寫</Button>
+					</div>
+				</Modal>
+			)
+		}
+		else{
+			return <span />;
+		}
 	}
 });
 

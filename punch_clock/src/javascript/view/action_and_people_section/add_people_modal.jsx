@@ -1,8 +1,8 @@
 var React = require("react");
-var Bootstrap = require("react-bootstrap");
-var Modal = Bootstrap.Modal;
-var Button = Bootstrap.Button;
-
+var Bootstrap = require("react-bootstrap"),
+	Modal = Bootstrap.Modal,
+	Button = Bootstrap.Button;
+	
 var AddPeopleModal = React.createClass({
 	render: function(){
 		return (
@@ -11,7 +11,8 @@ var AddPeopleModal = React.createClass({
 					這是新增員工的介面
 				</div>
 				<div className="modal-footer">
-					<Button onClick={this.props.onRequestHide}>關閉</Button>
+					<Button bsStyle="success" onClick={this.handleSubmitWork}>確認新增</Button>
+					<Button bsStyle="danger" onClick={this.props.onRequestHide}>關閉</Button>
 				</div>
 			</Modal>
 		);

@@ -21,6 +21,12 @@ var router = express.Router();
 
 router.use(express.static(__dirname + "/public"));
 
+// Show Request Information
+router.use(function(req, res, next){
+	logger.info("[" + req.method + "] " + req.originalUrl);
+	next();
+});
+
 // Prepare Result Package
 router.use(function(req, res, next){
 	res.result = {
@@ -75,120 +81,173 @@ router.get("/init", function(req, res){
 		"title":"Leedan",
 		"description":"Leedan is a small, elegant and high tech motor company.",
 		"working_item_list":[{
-			"title": "製圖",
-			"group": []
-		}, {
-			"title": "繞線計算",
-			"group": []
-		}, {
-			"title": "訊號校正",
-			"group": []
-		}, {
-			"title": "焊接",
-			"group": []
-		}, {
-			"title": "矽鋼片壓製",
-			"group": []
-		}, {
-			"title": "備料",
-			"group": []
-		}, {
-			"title": "繞線",
-			"group": []
-		}, {
-			"title": "入線",
-			"group": []
-		}, {
-			"title": "結線",
-			"group": []
-		}, {
-			"title": "整線",
-			"group": []
-		}, {
-			"title": "包布",
-			"group": []
-		}, {
-			"title": "磁石黏著",
-			"group": []
-		}, {
-			"title": "磁石定位",
-			"group": []
-		}, {
-			"title": "烤箱操作",
-			"group": []
-		}, {
-			"title": "動平衡",
-			"group": []
-		}, {
-			"title": "電機組裝",
-			"group": []
-		}, {
-			"title": "邊速輪組裝",
-			"group": []
-		}, {
-			"title": "變速機組裝",
-			"group": []
-		}, {
-			"title": "清潔無外框電機",
-			"group": []
-		}, {
-			"title": "噴漆",
-			"group": []
-		}, {
-			"title": "試機",
-			"group": []
-		}, {
-			"title": "搬運",
-			"group": []
-		}, {
-			"title": "堆高機",
-			"group": []
-		}, {
 			"title": "會計總帳",
+			"score": 33,
 			"group": []
 		}, {
-			"title": "會計填寫退貨單",
+			"title": "退貨單填寫",
+			"score": 55,
 			"group": []
 		}, {
-			"title": "進貨單開立系統維護",
+			"title": "進貨單開立",
+			"score": 31,
 			"group": []
 		}, {
-			"title": "出貨單開立系統維護",
+			"title": "出貨單開立",
+			"score": 30,
 			"group": []
 		}, {
-			"title": "接單報價估價",
+			"title": "系統內容維護",
+			"score": 30,
+			"group": []
+		}, {
+			"title": "接單/報價/估價",
+			"score": 44,
 			"group": []
 		}, {
 			"title": "一般性電話客服",
+			"score": 14,
 			"group": []
 		}, {
 			"title": "技術性電話客服",
+			"score": 36,
 			"group": []
 		}, {
 			"title": "零組件採購/追蹤",
+			"score": 37,
+			"group": []
+		}, {
+			"title": "製圖",
+			"score": 41,
+			"group": []
+		}, {
+			"title": "繞線計算",
+			"score": 47,
+			"group": []
+		}, {
+			"title": "訊號校正",
+			"score": 39,
+			"group": []
+		}, {
+			"title": "焊接",
+			"score": 39,
+			"group": []
+		}, {
+			"title": "矽鋼片壓製",
+			"score": 41,
+			"group": []
+		}, {
+			"title": "備料",
+			"score": 32,
+			"group": []
+		}, {
+			"title": "繞線",
+			"score": 33,
+			"group": []
+		}, {
+			"title": "入線",
+			"score": 27,
+			"group": []
+		}, {
+			"title": "結線",
+			"score": 38,
+			"group": []
+		}, {
+			"title": "整線",
+			"score": 27,
+			"group": []
+		}, {
+			"title": "包布",
+			"score": 26,
+			"group": []
+		}, {
+			"title": "磁石黏著",
+			"score": 32,
+			"group": []
+		}, {
+			"title": "磁石定位",
+			"score": 40,
+			"group": []
+		}, {
+			"title": "烤箱操作",
+			"score": 11,
+			"group": []
+		}, {
+			"title": "動平衡",
+			"score": 30,
+			"group": []
+		}, {
+			"title": "電機組裝",
+			"score": 43,
+			"group": []
+		}, {
+			"title": "變速輪組裝",
+			"score": 28,
+			"group": []
+		}, {
+			"title": "變速機組裝",
+			"score": 16,
+			"group": []
+		}, {
+			"title": "清潔",
+			"score": 32,
+			"group": []
+		}, {
+			"title": "噴漆",
+			"score": 24,
+			"group": []
+		}, {
+			"title": "試機",
+			"score": 32,
+			"group": []
+		}, {
+			"title": "搬運",
+			"score": 25,
+			"group": []
+		}, {
+			"title": "堆高機操作",
+			"score": 17,
+			"group": []
+		}, {
+			"title": "客戶資料蒐集",
+			"score": 2415,
+			"group": []
+		}, {
+			"title": "供應商資料蒐集",
+			"score": 2415,
+			"group": []
+		}, {
+			"title": "研發案討論",
+			"score": 2415,
+			"group": []
+		}, {
+			"title": "研發案資料製作",
+			"score": 4025,
+			"group": []
+		}, {
+			"title": "研發案實作",
+			"score": 4025,
 			"group": []
 		}]
 	}).then(function(newCompany){
 		company = newCompany;
 		var employeeList = [
-			{ "name": "王晃信", "id_number": "PLM001A", "passcode": "11111111" },
-			{ "name": "張訓賢", "id_number": "PLM002A", "passcode": "34325222" },
-			{ "name": "江武翰", "id_number": "PLM003A", "passcode": "46547644" },
-			{ "name": "陳智傑", "id_number": "PLM004A", "passcode": "59315333" },
-			{ "name": "王暐誌", "id_number": "PLM005A", "passcode": "85685765" },
-			{ "name": "劉若涵", "id_number": "PLM006A", "passcode": "69313122" },
-			{ "name": "賴奎宏", "id_number": "PLM007A", "passcode": "76531241" },
-			{ "name": "王俊岳", "id_number": "PLM008A", "passcode": "59127892" },
-			{ "name": "賴怡臻", "id_number": "PLM009A", "passcode": "57349132" },
-			{ "name": "賴奎銘", "id_number": "PLM010A", "passcode": "45891367" },
-			{ "name": "柯春妹", "id_number": "PLM011A", "passcode": "69148831" },
-			{ "name": "紀志榮", "id_number": "PLM012A", "passcode": "78592137" },
-			{ "name": "盧岳珈", "id_number": "PLM013A", "passcode": "24812225" },
-			{ "name": "陳奇樟", "id_number": "PLM014A", "passcode": "52912352" },
+			{ "name": "江武翰", "id_number": "OS5692A", "passcode": "75267181" },
+			{ "name": "紀志榮", "id_number": "OS4141A", "passcode": "37961251" },
+			{ "name": "劉若涵", "id_number": "OS7200A", "passcode": "63293949" },
+			{ "name": "陳智傑", "id_number": "OS3457A", "passcode": "82163366" },
+			{ "name": "吳明姍", "id_number": "OSXXXXA", "passcode": "93612877" },
+			{ "name": "賴奎宏", "id_number": "PL0299A", "passcode": "27114218" },
+			{ "name": "賴怡臻", "id_number": "PLXXXXA", "passcode": "59557925" },
+			{ "name": "柯春妹", "id_number": "PL3988A", "passcode": "27967164" },
+			{ "name": "盧岳珈", "id_number": "PL3952A", "passcode": "19967671" },
+			{ "name": "王俊岳", "id_number": "PL8133A", "passcode": "79135879" },
+			{ "name": "王暐誌", "id_number": "PL1437A", "passcode": "74335468" },
+			{ "name": "陳奇樟", "id_number": "PL8866A", "passcode": "13638142" },
 			{
 				"name": "施閎凱",
-				"id_number": "PLM999A",
-				"passcode": "12345678",
+				"id_number": "AD3680Z",
+				"passcode": "11235813",
 				"permission": ["leave", "manage_employee"]
 			}
 		];
@@ -316,7 +375,6 @@ router.post("/company/:company_id/employee/:employee_id/punch_record", function(
 	}
 });
 router.post("/company/:company_id/employee/:employee_id/working_record", function(req, res){
-	console.log(JSON.stringify(req.body));
 	if(util.isArray(req.body.working_item_list) && req.body.working_item_list.length > 0){
 		req.employee.AddWorkingRecord(req.company, req.body.working_item_list).then(function(){
 			return req.company.SaveWithPromise(true);

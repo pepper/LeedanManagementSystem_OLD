@@ -2,10 +2,26 @@ var React = require("react");
 var	Router = require("react-router");
 var	Fluxxor = require("fluxxor"),
 	FluxMixin = Fluxxor.FluxMixin(React);
+var Bootstrap = require("react-bootstrap"),
+	Modal = Bootstrap.Modal,
+	Button = Bootstrap.Button,
+	OverlayMixin = Bootstrap.OverlayMixin;
+
 var WorkItem = require("./work_item.jsx");
+var ConfirmWorkModal = require("./confirm_work_modal.jsx");
 
 var WorkItemList = React.createClass({
-	mixins: [FluxMixin, Router.Navigation, Router.State],
+	mixins: [FluxMixin, Router.Navigation, Router.State, OverlayMixin],
+	getInitialState: function(){
+		return {
+			isModalOpen: false
+		};
+	},
+	handleConfirmWorkModal: function(){
+		this.setState({
+			isModalOpen: !this.state.isModalOpen
+		});
+	},
 	handleConfirmWorkItemList: function(){
 		var store = this.getFlux().store("CompanyStore");
 		this.getFlux().actions.addWorkingItemList(store.company._id, store.employee._id, store.employee.newWorkingItemList);
@@ -31,7 +47,7 @@ var WorkItemList = React.createClass({
 						{rows}
 					</div>
 					<div className="ActionContainer">
-						<div className="Confirm" onTouchEnd={this.handleConfirmWorkItemList}>
+						<div className="Confirm" onTouchEnd={this.handleConfirmWorkModal}>
 							<i className="fa fa-check-circle-o"></i><br />
 							確認
 						</div>
@@ -45,6 +61,15 @@ var WorkItemList = React.createClass({
 					</div>
 				</div>
 			</div>
+		);
+	},
+	renderOverlay: function(){
+		if(!this.state.isModalOpen){
+			return <span />;
+		}
+		var store = this.getFlux().store("CompanyStore");
+		return (
+			<ConfirmWorkModal onRequestHide={this.handleConfirmWorkModal} onConfirmWork={this.handleConfirmWorkItemList} workingItemList={store.employee.newWorkingItemList}/>
 		);
 	}
 });

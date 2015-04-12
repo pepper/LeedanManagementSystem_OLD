@@ -54,19 +54,18 @@ var actions = {
 		});
 	},
 	addWorkingItemList: function(companyId, employeeId, workingItemList){
-		var data = {
-			working_item_list: workingItemList
-		};
-		console.log(JSON.stringify(data));
 		reqwest({
 			url: "/api/company/" + companyId + "/employee/" + employeeId + "/working_record",
 			type: "json",
 			method: "post",
 			contentType: "application/json",
-			data: JSON.stringify(data)
+			data: JSON.stringify({
+				working_item_list: workingItemList
+			})
 		}).then(function(res){
 			if(res.objects[0]){
 				this.dispatch(Constants.ADD_WORKING_ITEM_LIST_SUCCESS, res.objects[0]);
+				this.dispatch(Constants.LOGOUT_EMPLOYEE);
 			}
 			else{
 				throw new Error("No response");

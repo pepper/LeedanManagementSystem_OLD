@@ -14,29 +14,40 @@ var WorkItem = React.createClass({
 		};
 	},
 	handleTouchStart: function(event) {
+		this.startMoveTimeout = setTimeout(function(){
+			this.setState({
+				active: true
+			});
+		}.bind(this), 500);
 		this.setState({
-			active: true,
+			active: false,
 			startX: event.touches[0].clientX,
 			startOffset: this.state.offset
 		});
 	},
 	handleTouchEnd: function(event) {
+		if(this.startMoveTimeout){
+			clearTimeout(this.startMoveTimeout);
+		}
 		this.setState({
 			active: false,
 			startOffset: 0,
 			startX: -1,
-			offset: 0
+			offset: 0,
+			// canMove: false
 		});
 		this.getFlux().actions.changeWorkingItemScore(this.props.title, this.props.score + this.state.offset);
 	},
 	handleTouchMove: function(event){
-		var newOffset = this.state.startOffset + Math.floor((event.touches[0].clientX - this.state.startX) / 40);
-		if(this.props.score + newOffset < 0){
-			newOffset = 0 - this.props.score;
+		if(this.state.active){
+			var newOffset = this.state.startOffset + Math.floor((event.touches[0].clientX - this.state.startX) / 40);
+			if(this.props.score + newOffset < 0){
+				newOffset = 0 - this.props.score;
+			}
+			this.setState({
+				offset: newOffset
+			});
 		}
-		this.setState({
-			offset: newOffset
-		});
 	},
 	render: function(){
 		var workItemClass = this.state.active ? "WorkItem Active" : "WorkItem";

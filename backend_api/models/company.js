@@ -24,6 +24,7 @@ var CompanySchema = new mongoose.Schema({
 
 	working_item_list:[{
 		title					:{ type: String, trim: true, default: "" },
+		score					:{ type: Number },
 		group					:[{ type: String, trim: true, default: "" }]
 	}]
 });
