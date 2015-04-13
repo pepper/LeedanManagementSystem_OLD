@@ -22,7 +22,6 @@ var PeopleList = React.createClass({
 		});
 	},
 	handleAddPeople: function(name, idNumber, passcode){
-		alert(name + " " + idNumber + " " + passcode);
 		var store = this.getFlux().store("CompanyStore");
 		this.getFlux().actions.addEmployee(store.company._id, name, idNumber, passcode);
 	},
