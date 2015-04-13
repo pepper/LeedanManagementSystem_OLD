@@ -22,7 +22,9 @@ var CompanyStore = Fluxxor.createStore({
 
 			Constants.CREATE_EMPTY_WORKING_ITEM_LIST, this.onCreateEmptyWorkingItemList,
 			Constants.CHANGE_WORKING_ITEM_SCORE, this.onChangeWorkingItemScore,
-			Constants.ADD_WORKING_ITEM_LIST_SUCCESS, this.onAddPunchRecordSuccess
+			Constants.ADD_WORKING_ITEM_LIST_SUCCESS, this.onAddPunchRecordSuccess,
+
+			Constants.ADD_EMPLOYEE_SUCCESS, this.onAddEmployeeSuccess
 		);
 	},
 	onLoadCompany: function(){
@@ -127,6 +129,12 @@ var CompanyStore = Fluxxor.createStore({
 				});
 			});
 		});
+	},
+	onAddEmployeeSuccess: function(newEmployee){
+		this.company.employee_list.push(newEmployee);
+		this.recalaculateEmployeeList();
+		this.onCreateEmptyWorkingItemList();
+		this.emit("change");
 	}
 });
 

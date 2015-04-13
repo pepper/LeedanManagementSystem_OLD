@@ -29,7 +29,7 @@ div {
 }
 .MainContainer .MainMenu .Logo {
   height: 64px;
-  background: url("../image/logo.png") no-repeat 50% 84%/75px 22px;
+  background: url("../image/logo.png") no-repeat 50% 82%/72.5px 20px;
 }
 .MainContainer .MainMenu .Item {
   height: 70px;
@@ -318,6 +318,16 @@ div {
   color: #f99517;
   font-size: 16px;
 }
+.WorkingRecord * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 .WorkingRecord .WorkItem {
   position: relative;
   display: inline-block;
@@ -418,15 +428,4 @@ div {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-}
-* {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 }

@@ -142,7 +142,7 @@ var NumericKeypad = React.createClass({
 			this.props.login = true;
 			this.logoutTimer = setTimeout(function(){
 				this.getFlux().actions.logoutEmployee();
-			}.bind(this), 30000);
+			}.bind(this), 120000);
 		}
 		var key = {};
 		_.each({
@@ -259,7 +259,7 @@ var NumericKeypad = React.createClass({
 				<div className="ContentAreaContainer">
 					<div className="ContentArea NumericKeypad">
 						{keyDom}
-						<div className="Logout" onTouchEnd={this.handleLogout}>
+						<div className="Logout" onClick={this.handleLogout}>
 							<i className="fa fa-sign-out"></i>
 							登出
 						</div>

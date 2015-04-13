@@ -74,6 +74,29 @@ var actions = {
 			console.error(err.message);
 			alert(err.message);
 		}.bind(this));
+	},
+	addEmployee: function(companyId, name, idNumber, passcode){
+		reqwest({
+			url: "/api/company/" + companyId + "/employee",
+			type: "json",
+			method: "post",
+			contentType: "application/json",
+			data: JSON.stringify({
+				name: name,
+				id_number: idNumber,
+				passcode: passcode
+			})
+		}).then(function(res){
+			if(res.objects[0]){
+				this.dispatch(Constants.ADD_EMPLOYEE_SUCCESS, res.objects[0]);
+			}
+			else{
+				throw new Error("No response");
+			}
+		}.bind(this), function(err, message){
+			console.error(err.message);
+			alert(err.message);
+		}.bind(this));
 	}
 }
 

@@ -1,12 +1,31 @@
 var React = require("react");
-var Bootstrap = require("react-bootstrap");
-var ModalTrigger = Bootstrap.ModalTrigger;
-var Button = Bootstrap.Button;
+var	Fluxxor = require("fluxxor"),
+	FluxMixin = Fluxxor.FluxMixin(React);
+var Bootstrap = require("react-bootstrap"),
+	Modal = Bootstrap.Modal,
+	Button = Bootstrap.Button,
+	OverlayMixin = Bootstrap.OverlayMixin;
 
 var People = require("./people.jsx");
 var AddPeopleModal = require("./add_people_modal.jsx");
 
 var PeopleList = React.createClass({
+	mixins: [FluxMixin, OverlayMixin],
+	getInitialState: function(){
+		return {
+			isAddPeopleModalOpen: false
+		};
+	},
+	handleAddPeopleModal: function(){
+		this.setState({
+			isAddPeopleModalOpen: !this.state.isAddPeopleModalOpen
+		});
+	},
+	handleAddPeople: function(name, idNumber, passcode){
+		alert(name + " " + idNumber + " " + passcode);
+		var store = this.getFlux().store("CompanyStore");
+		this.getFlux().actions.addEmployee(store.company._id, name, idNumber, passcode);
+	},
 	render: function(){
 		var rows = [];
 		var context = this;
@@ -24,25 +43,31 @@ var PeopleList = React.createClass({
 		});
 		if(context.props.editMode){
 			rows.push(
-				<ModalTrigger key={Math.random()} modal={<AddPeopleModal />}>
-					<div className="Item People">
-						<Button></Button>
-						<div className="LeftColumn">
-							<div className="Icon Yellow">
-								<i className="fa fa-plus-square"></i>
-							</div>
-							<div className="Title">
-								新增帳號
-							</div>
+				<div key={Math.random()} className="Item People">
+					<div className="LeftColumn" onClick={this.handleAddPeopleModal}>
+						<div className="Icon Yellow">
+							<i className="fa fa-plus-square"></i>
+						</div>
+						<div className="Title">
+							新增帳號
 						</div>
 					</div>
-				</ModalTrigger>
+				</div>
 			);
 		}
 		return (
 			<div className="PeopleList">
 				{rows}
 			</div>
+		);
+	},
+	renderOverlay: function(){
+		if(!this.state.isAddPeopleModalOpen){
+			return <span />;
+		}
+		var store = this.getFlux().store("CompanyStore");
+		return (
+			<AddPeopleModal onRequestHide={this.handleAddPeopleModal} onAddPeople={this.handleAddPeople}/>
 		);
 	}
 });

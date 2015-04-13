@@ -47,14 +47,14 @@ var WorkItemList = React.createClass({
 						{rows}
 					</div>
 					<div className="ActionContainer">
-						<div className="Confirm" onTouchEnd={this.handleConfirmWorkModal}>
+						<div className="Confirm" onClick={this.handleConfirmWorkModal}>
 							<i className="fa fa-check-circle-o"></i><br />
 							確認
 						</div>
 						<div className="Summery">
 							單日累計積分：{this.props.todayTotal}
 						</div>
-						<div className="SignOut" onTouchEnd={this.handleLogout}>
+						<div className="SignOut" onClick={this.handleLogout}>
 							<i className="fa fa-sign-out"></i><br />
 							登出
 						</div>
