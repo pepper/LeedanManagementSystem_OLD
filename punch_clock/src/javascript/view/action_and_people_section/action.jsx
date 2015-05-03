@@ -7,7 +7,7 @@ var Action = React.createClass({
 		return (
 			<div className="Item IconItem">
 				<i className={iconClassString}></i>
-				<div>{this.props.title}</div>
+				<div onClick={this.props.action}>{this.props.title}</div>
 			</div>
 		);
 	}

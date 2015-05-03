@@ -26,6 +26,13 @@ var CompanySchema = new mongoose.Schema({
 		title					:{ type: String, trim: true, default: "" },
 		score					:{ type: Number },
 		group					:[{ type: String, trim: true, default: "" }]
+	}],
+
+	working_hours:[{
+		title					:{ type: String, trim: true, default: "" },
+		key						:{ type: String, trim: true, default: "" },
+		start					:{ type: Number, min: 0},
+		end						:{ type: Number, min: 0}
 	}]
 });
 
@@ -50,7 +57,8 @@ CompanySchema.statics.CreateCompany = function(property){
 	var company;
 	Promise.resolve(model.create({
 		title: property.title,
-		serial_number: serialNumber
+		serial_number: serialNumber,
+		working_hours: property.working_hours
 	})).then(function(newCompany){
 		company = newCompany;
 		return company.UpdateProperty(property, true);
@@ -133,6 +141,23 @@ CompanySchema.methods.IsVaildWorkingItem = function(title){
 	});
 	return found;
 }
-
+CompanySchema.methods.GeneratePaySheet = function(start, end){
+	var company = this;
+	var resolver = Promise.defer();
+	var employeePromiseList = [];
+	company.employee_list.forEach(function(employee){
+		employeePromiseList.push(employee.GeneratePaySheet(company, start, end));
+	});
+	Promise.all(employeePromiseList).then(function(){
+		logger.warn("Company Save");
+		return company.SaveWithPromise(true);
+	}).then(function(){
+		resolver.resolve(company);
+	}).catch(function(err){
+		logger.error(err);
+		resolver.reject(err);
+	});
+	return resolver.promise;
+}
 //Mongoose Register
 exports = module.exports = mongoose.model("Company", CompanySchema);

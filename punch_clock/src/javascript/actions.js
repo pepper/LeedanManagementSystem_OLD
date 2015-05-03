@@ -97,6 +97,9 @@ var actions = {
 			console.error(err.message);
 			alert(err.message);
 		}.bind(this));
+	},
+	generatePaySheet: function(){
+		alert("generatePaySheet in action");
 	}
 }
 

@@ -18,5 +18,9 @@ router.get("/working_record", function(req, res) {
 	res.sendFile(path.join(__dirname, "public", "html", "index.html"));
 });
 
+router.get("/accounting", function(req, res) {
+	res.sendFile(path.join(__dirname, "public", "html", "index.html"));
+});
+
 // Export router
 exports = module.exports = router;
