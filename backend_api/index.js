@@ -4,6 +4,8 @@ var util = require("util");
 var validator = require("validator");
 var Promise = require("bluebird");
 var _ = require("underscore");
+var path = require("path");
+var fs = require("fs");
 
 var config = require("./config");
 var database = require("./utilities/database");
@@ -647,19 +649,27 @@ var printDate = function(input){
 	}
 }
 router.get("/company/:company_id/report", function(req, res){
+	var filename = path.join(__dirname, "..", "temp", "report.csv");
+	fs.truncateSync(filename, 0);
 	req.company.employee_list.forEach(function(employee){
 		if(employee.pay_sheet && employee.pay_sheet.length > 0){
-			console.log(employee.pay_sheet[0].name);
+			fs.appendFileSync(filename, "員工姓名, " + employee.pay_sheet[0].name + "\n");
+			fs.appendFileSync(filename, employee.pay_sheet[0].title + "\n");
+			fs.appendFileSync(filename, "日期, 上班, 下班, 累計工時, 上班, 下班, 累計工時, 上班, 下班, 累計工時, 總工時, 餐費補助\n");
 			employee.pay_sheet[0].punch_record.date_record_list.forEach(function(dateRecord){
-				console.log(printDate(dateRecord.date));
-				dateRecord.working_hours.forEach(function(workingHours){
-					console.log(workingHours.title + ", " + printDate(workingHours.start_time) + " ~ " + printDate(workingHours.end_time) + ", " + printDate(workingHours.real_start_time) + " ~ " + printDate(workingHours.real_end_time));
-				});
-				dateRecord.raw_record_list.forEach(function(rawRecord){
-					console.log(rawRecord.type + ", " + printDate(rawRecord.datetime));
-				});
+				if(dateRecord.raw_record_list.length > 0){
+					fs.appendFileSync(filename, printDate(dateRecord.date).split(" ")[0] + ", ");
+					dateRecord.working_hours.forEach(function(workingHours){
+						fs.appendFileSync(filename, printDate(workingHours.real_start_time) + ", " + printDate(workingHours.real_end_time) + ", 0, ");
+					});
+					fs.appendFileSync(filename, "0\n");
+					fs.appendFileSync(filename, "原始打卡紀錄\n");
+					dateRecord.raw_record_list.forEach(function(rawRecord){
+						fs.appendFileSync(filename, rawRecord.type + ", " + printDate(rawRecord.datetime) + "\n");
+					});
+				}
 			});
-			console.log("\n");
+			fs.appendFileSync(filename, "\n\n");
 		}
 	});
 	res.send("OK");

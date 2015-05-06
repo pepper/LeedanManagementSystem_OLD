@@ -6,7 +6,8 @@ var router = express.Router();
 
 router.use(express.static(path.join(__dirname, "public")));
 
-router.get("/", function(req, res) {
+router.get("*", function(req, res) {
+	console.log("Hello!!!");
 	res.sendFile(path.join(__dirname, "public", "html", "index.html"));
 });
 
@@ -19,6 +20,10 @@ router.get("/working_record", function(req, res) {
 });
 
 router.get("/accounting", function(req, res) {
+	res.sendFile(path.join(__dirname, "public", "html", "index.html"));
+});
+
+router.get("/accounting/*", function(req, res) {
 	res.sendFile(path.join(__dirname, "public", "html", "index.html"));
 });
 

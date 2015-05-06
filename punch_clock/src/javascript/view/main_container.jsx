@@ -23,11 +23,15 @@ var mainMenuData = [{
 	icon: "diamond",
 	description: "Working Record",
 	link: "working_record"
+}, {
+	icon: "usd",
+	description: "Accounting",
+	link: "accounting"
 }];
 addKeyToArrayItem(mainMenuData);
 
 var MainContainer = React.createClass({
-	mixins: [FluxMixin],
+	mixins: [FluxMixin, Router.State],
 	render: function(){
 		return (
 			<div className="MainContainer">

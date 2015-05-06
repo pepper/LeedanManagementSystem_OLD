@@ -76,7 +76,7 @@ var EmployeeSchema = new mongoose.Schema({
 		},
 		title						:{ type: String, trim: true, default: "" },
 		name						:{ type: String, trim: true, default: "" },
-		serial_number				:{ type: String, trim: true, default: "" },
+		id_number					:{ type: String, trim: true, default: "" },
 		punch_record:{
 			date_record_list:[{
 				date				:{ type: Date},
@@ -106,7 +106,7 @@ var EmployeeSchema = new mongoose.Schema({
 			quota:{
 				annual_leave_left	:{ type: Number, min: 0, default: 0 }		// 以小時計
 			},
-			tital:{
+			total:{
 				personal			:{ type: Number, min: 0, default: 0 },		// 以小時計
 				sick				:{ type: Number, min: 0, default: 0 },		// 以小時計
 				annual				:{ type: Number, min: 0, default: 0 }		// 以小時計
@@ -124,6 +124,7 @@ var EmployeeSchema = new mongoose.Schema({
 			}]
 		},
 		accounting:{
+			total					:{ type: Number, min: 0, default: 0 },		// 總計
 			salary:{
 				type				:{ type: String, trim: true, default: "" },	// wage_hour, wage_day, wage_week, salary
 				value				:{ type: Number, min: 0, default: 0 }
@@ -135,7 +136,8 @@ var EmployeeSchema = new mongoose.Schema({
 			food_allowance			:{ type: Number, min: 0, default: 0 },		// 伙食補貼
 			labor_insurance			:{ type: Number, min: 0, default: 0 },		// 勞保費
 			health_insurance		:{ type: Number, min: 0, default: 0 },		// 健保費
-			late_fines				:{ type: Number, min: 0, default: 0 }		// 遲到扣薪
+			late_fines				:{ type: Number, min: 0, default: 0 },		// 遲到扣薪
+			late_fines_hour			:{ type: Number, min: 0, default: 0 }		// 遲到扣薪
 		}
 	}]
 });
@@ -272,7 +274,7 @@ EmployeeSchema.methods.GeneratePaySheet = function(company, startInput, endInput
 			},
 			title: company.title + " " + start.getFullYear() + "年" + (start.getMonth() + 1) + "月" + start.getDate() + "日~" + end.getFullYear() + "年" + (end.getMonth() + 1) + "月" + end.getDate() + "日 薪資單",
 			name: employee.name,
-			serial_number: employee.serial_number,
+			id_number: employee.id_number,
 			punch_record:{
 				date_record_list: [],
 				late:{
@@ -285,7 +287,7 @@ EmployeeSchema.methods.GeneratePaySheet = function(company, startInput, endInput
 				quota:{
 					annual_leave_left: employee.leave.quota.annual_leave_left
 				},
-				tital:{
+				total:{
 					personal: 0,
 					sick: 0,
 					annual: 0,
@@ -326,7 +328,6 @@ EmployeeSchema.methods.GeneratePaySheet = function(company, startInput, endInput
 					var rawRecord = rawRecordList.splice(i, 1)[0];
 					
 					newDateRecord.raw_record_list.push(rawRecord);
-					// logger.debug(JSON.stringify(newDateRecord));
 					
 					var currentDelta = 86400000;
 					var currentKey = "";
@@ -350,11 +351,15 @@ EmployeeSchema.methods.GeneratePaySheet = function(company, startInput, endInput
 						if(workingHour.key == currentKey){
 							switch(rawRecord.type){
 								case "OnDuty":
-									workingHour.real_start_time = rawRecord.datetime;
+									if(!(workingHour.real_start_time && workingHour.real_start_time < rawRecord.datetime)){
+										workingHour.real_start_time = rawRecord.datetime;
+									}
 									break;
 								case "Break":
 								case "OffDuty":
-									workingHour.real_end_time = rawRecord.datetime;
+									if(!(workingHour.real_end_time && workingHour.real_end_time > rawRecord.datetime)){
+										workingHour.real_end_time = rawRecord.datetime;
+									}
 									break;
 							}
 							return true;
@@ -363,11 +368,23 @@ EmployeeSchema.methods.GeneratePaySheet = function(company, startInput, endInput
 				}
 			}
 			newPaySheet.punch_record.date_record_list.push(newDateRecord);
-			// logger.debug(JSON.stringify(newDateRecord));
 			dateRecordDateSeed.setDate(dateRecordDateSeed.getDate() + 1);
 			dateRecordWorkingHoursEndTimeSeed.setDate(dateRecordWorkingHoursEndTimeSeed.getDate() + 1);
 		} while(dateRecordWorkingHoursEndTimeSeed < end);
-		logger.warn("Employee finish");
+
+		// Remove old pay sheet
+		var oldPaySheetIndex = -1;
+		var found = employee.pay_sheet.some(function(paySheet, index){
+			if(paySheet.duration.start.getTime() == newPaySheet.duration.start.getTime() && paySheet.duration.start.getTime() == newPaySheet.duration.start.getTime()){
+				oldPaySheetIndex = index;
+				return true;
+			}
+		});
+		if(found){
+			employee.pay_sheet.splice(oldPaySheetIndex, 1);
+		}
+
+		// Add new pay sheet
 		employee.pay_sheet.push(newPaySheet);
 		return Promise.resolve();
 	}

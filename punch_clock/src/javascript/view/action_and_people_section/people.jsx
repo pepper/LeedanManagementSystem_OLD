@@ -1,12 +1,12 @@
 var React = require("react");
+var	Router = require("react-router"),
+	Link = Router.Link;
 
 var People = React.createClass({
 	render: function(){
+		var editMode = false;
 		if(String(this.props.editMode) == "true"){
-			this.props.editMode = true;
-		}
-		else{
-			this.props.editMode = false;
+			editMode = true;
 		}
 		
 		var classString = "Item People";
@@ -27,7 +27,7 @@ var People = React.createClass({
 		var scoreString = this.props.score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		var icon = "data:image/jpg;base64," + this.props.avatar;
 
-		if(this.props.editMode){
+		if(editMode){
 			icon = <div className="Icon">
 						<i className="fa fa-minus-square"></i>
 					</div>
@@ -39,23 +39,43 @@ var People = React.createClass({
 					</div>
 		}
 
-		return (
-			<div className={classString}>
-				<div className="LeftColumn">
-					{icon}
-					<div className="NameAndIDNumber">
-						<div>{this.props.name}</div>
-						<div>{this.props.idNumber}</div>
+		var result = <div className={classString}>
+						<div className="LeftColumn">
+							{icon}
+							<div className="NameAndIDNumber">
+								<div>{this.props.name}</div>
+								<div>{this.props.idNumber}</div>
+							</div>
+						</div>
+						<div className="RightColumn">
+							<div className="ScoreTitle">
+								Total score <span className={scoreTrendIconString}>{scoreTrendString}</span>
+							</div>
+							<div className="ScoreValue">{scoreString}</div>
+						</div>
 					</div>
-				</div>
-				<div className="RightColumn">
-					<div className="ScoreTitle">
-						Total score <span className={scoreTrendIconString}>{scoreTrendString}</span>
-					</div>
-					<div className="ScoreValue">{scoreString}</div>
-				</div>
-			</div>
-		);
+
+		if(this.props.url && this.props.url != ""){
+			result = <Link to={this.props.url}>
+						<div className={classString}>
+							<div className="LeftColumn">
+								{icon}
+								<div className="NameAndIDNumber">
+									<div>{this.props.name}</div>
+									<div>{this.props.idNumber}</div>
+								</div>
+							</div>
+							<div className="RightColumn">
+								<div className="ScoreTitle">
+									Total score <span className={scoreTrendIconString}>{scoreTrendString}</span>
+								</div>
+								<div className="ScoreValue">{scoreString}</div>
+							</div>
+						</div>
+					</Link>
+		}
+
+		return result;
 	}
 });
 

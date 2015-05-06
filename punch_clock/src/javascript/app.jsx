@@ -9,6 +9,7 @@ var MainContainer = require("./view/main_container.jsx");
 var TimePunch = require("./view/time_punch/time_punch.jsx");
 var WorkingRecord = require("./view/working_record/working_record.jsx");
 var Accounting = require("./view/accounting/accounting.jsx");
+var PaySheetContainer = require("./view/accounting/pay_sheet_container.jsx");
 
 var CompanyStore = require("./store/companyStore");
 
@@ -33,7 +34,8 @@ var routes = (
 		</Route>
 		<Route name="working_record" handler={WorkingRecord}>
 		</Route>
-		<Route name="accounting" handler={Accounting}>
+		<Route path="accounting" name="accounting" handler={Accounting}>
+			<Route path="pay_sheet/:employeeId" handler={PaySheetContainer}/>
 		</Route>
 		<DefaultRoute handler={TimePunch}/>
 	</Route>

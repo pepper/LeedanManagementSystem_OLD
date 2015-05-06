@@ -5,13 +5,11 @@ var PeopleList = require("./people_list.jsx");
 var ActionAndPeopleContainer = React.createClass({
 	render: function(){
 		var rows = [];
+		var manageEmployeePermission = false;
 		if(String(this.props.manageEmployeePermission) == "true"){
-			this.props.manageEmployeePermission = true;
+			manageEmployeePermission = true;
 		}
-		else{
-			this.props.manageEmployeePermission = false;
-		}
-		if(this.props.manageEmployeePermission){
+		if(manageEmployeePermission){
 			rows.push(
 				<div key={Math.random()} className="Item IconItem AdministratorMode">
 					<i className="fa fa-wrench"></i>
@@ -22,7 +20,7 @@ var ActionAndPeopleContainer = React.createClass({
 		this.props.actions.forEach(function(action){
 			rows.push(<Action {...action} />);
 		});
-		rows.push(<PeopleList key={Math.random()} editMode={this.props.manageEmployeePermission} peoples={this.props.peoples} />);
+		rows.push(<PeopleList key={Math.random()} editMode={manageEmployeePermission} peoples={this.props.peoples} />);
 		var emptyCount = 0;
 		while(this.props.actions.length + this.props.peoples.length + emptyCount < 11){
 			rows.push(<div key={Math.random()} className="Item"></div>);
