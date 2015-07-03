@@ -1,0 +1,30 @@
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm-6 b-r">
+            <h3 class="m-t-none m-b">Add New Stock</h3>
+            <form role="form">
+                <div class="form-group"><label>Title</label> <input type="text" placeholder="請輸入品名" class="form-control" ng-model="title"></div>
+                <div class="form-group"><label>SKU</label> <input type="text" placeholder="請輸入編號" class="form-control" ng-model="sku_number"></div>
+
+                <div class="form-group"><label>Keeper</label>
+                    <select class="form-control m-b" ng-model="keeper" ng-options="employee.id as employee.name for employee in employeeList">
+                        <option>選擇負責人</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-6">
+            <h3 class="m-t-none m-b">Current Status</h3>
+            <form role="form">
+                <div class="form-group"><label>Stock Number</label> <input type="text" placeholder="請輸入現有數量" class="form-control" ng-model="stock_number"></div>
+                <div class="form-group"><label>Safety Stock</label> <input type="text" placeholder="請輸入安全庫存" class="form-control" ng-model="safety_stock"></div>
+                <div class="form-group"><label>Unit</label> <input type="text" placeholder="請輸入單位" class="form-control" ng-model="unit"></div>
+                <div class="form-group"><label>Supplier</label>
+                    <select class="form-control m-b" ng-model="supplier" ng-options="supplier.id as supplier.title for supplier in supplierList" multiple></select>
+                </div>
+                
+                <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit" ng-click="ok()"><strong>Add</strong></button>
+            </form>
+        </div>
+    </div>
+</div>

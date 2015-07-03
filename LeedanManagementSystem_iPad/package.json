@@ -1,0 +1,17 @@
+{
+  "name": "LeedanManagementSystem_iPad",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node_modules/react-native/packager/packager.sh"
+  },
+  "dependencies": {
+    "bluebird": "*",
+    "error-builder": "*",
+    "events": "*",
+    "flux": "*",
+    "react-native": "^0.5.0",
+    "react-native-camera": "*",
+    "react-native-icons": "*"
+  }
+}

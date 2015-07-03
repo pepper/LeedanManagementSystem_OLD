@@ -1,0 +1,40 @@
+<div class="wrapper wrapper-content animated fadeInRight" ng-controller="StockCtrl">
+	<div class="row">
+		<div class="col-lg-12">
+			<button type="button" class="btn btn-w-m btn-primary" ng-click="openAddStockModal()">Add Stock</button>
+		</div>
+	</div>
+	<br />
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox-content">
+				<table datatable="ng" class="table table-striped table-bordered table-hover dataTables-example">
+					<thead>
+						<tr>
+							<th>Title</th>
+							<th>SKU</th>
+							<th>Stock Number</th>
+							<th>Safety Stock</th>
+							<th>Unit</th>
+							<th>Keeper</th>
+							<th>Supplier</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="stock in stockList">
+							<td>{{ stock.title }}</td>
+							<td>{{ stock.sku_number }}</td>
+							<td>{{ stock.stock_number }}</td>
+							<td>{{ stock.safety_stock }}</td>
+							<td>{{ stock.unit }}</td>
+							<td>{{ stock.keeper_name }}</td>
+							<td>
+								<span class="label label-primary" ng-repeat="supplier_name in stock.supplier_name_list">{{supplier_name}}</span>&nbsp;
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
